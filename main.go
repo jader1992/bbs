@@ -6,7 +6,6 @@ package main
 import (
     "bbs/app/console"
     "bbs/app/http"
-    "bbs/app/provider/demo"
     "github.com/jader1992/gocore/framework"
     "github.com/jader1992/gocore/framework/provider/app"
     "github.com/jader1992/gocore/framework/provider/cache"
@@ -28,7 +27,7 @@ func main() {
 
 	// 绑定App服务提供者
 	container.Bind(&app.GocoreAppProvider{})
-	container.Bind(&demo.TestProvider{})
+
 	// 后续初始化需要绑定的服务提供者...
 	container.Bind(&distributed.LocalDistributedProvider{}) // 分布式定时任务
 	container.Bind(&env.GocoreEnvProvider{})                // ENV相关

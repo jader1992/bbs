@@ -2,12 +2,14 @@ package http
 
 import (
 	"bbs/app/http/middleware/cors"
-    "github.com/jader1992/gocore/framework/contract"
-    "github.com/jader1992/gocore/framework/gin"
+	"bbs/app/http/module/qa"
+	"bbs/app/http/module/user"
+	"github.com/jader1992/gocore/framework/contract"
+	"github.com/jader1992/gocore/framework/gin"
 	"github.com/jader1992/gocore/framework/middleware"
-    ginSwagger "github.com/jader1992/gocore/framework/middleware/gin-swagger"
-    "github.com/jader1992/gocore/framework/middleware/gin-swagger/swaggerFiles"
-    "github.com/jader1992/gocore/framework/middleware/static"
+	ginSwagger "github.com/jader1992/gocore/framework/middleware/gin-swagger"
+	"github.com/jader1992/gocore/framework/middleware/gin-swagger/swaggerFiles"
+	"github.com/jader1992/gocore/framework/middleware/static"
 )
 
 // Routes 绑定业务层路由
@@ -30,4 +32,10 @@ func Routes(r *gin.Engine) {
         // 原理：是寻找main下的doc.go, 本项目为什么可以生效： 因为main 包含了 app/http， 而app/http/swagger.go 由包含了./swagger
         r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
     }
+
+	// 用户模块
+	user.RegisterRoutes(r)
+
+	// 问答模块
+	qa.RegisterRoutes(r)
 }
