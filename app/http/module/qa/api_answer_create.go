@@ -4,42 +4,45 @@ import (
 	"bbs/app/http/middleware/auth"
 	provider "bbs/app/provider/qa"
 	"github.com/jader1992/gocore/framework/gin"
-	"github.com/pkg/errors"
 )
 
-// AnswerCreate 创建问题
+type answerCreateParam struct {
+	QuestionID int64  `json:"question_id" binding:"required"`
+	ParentID   int64  `json:"parent_id"`
+	Content    string `json:"content" binding:"required"`
+}
+
+// AnswerCreate 创建回答
+// @Summary 创建回答
+// @Description 创建回答
+// @Accept json
+// @Produce json
+// @Tags qa
+// @questionCreateParam answerCreateParam body answerCreateParam true "创建回答参数"
+// @Router /answer/create [post]
 func (api *QApi) AnswerCreate(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
 
-	type Param struct {
-		QuestionID int64  `json:"question_id" binding:"required"`
-		ParentID   int64  `json:"parent_id"`
-		Content    string `json:"content" binding:"required"`
-	}
-
-	param := &Param{}
+	param := &answerCreateParam{}
 	if err := c.ShouldBind(param); err != nil {
-		c.AbortWithError(404, err)
+		c.ISetStatus(404).IText(err.Error())
 		return
 	}
 
 	user := auth.GetAuthUser(c)
 	if user == nil {
-		c.AbortWithError(500, errors.New("请登录后再操作"))
+		c.ISetStatus(500).IText("请登录后再操作")
 		return
 	}
 
 	answer := &provider.Answer{
-		ID:         0,
-		QuestionId: param.QuestionID,
+		QuestionID: param.QuestionID,
 		Content:    param.Content,
-		ParentID:   param.ParentID,
 		AuthorID:   user.ID,
 	}
 
-	ctx := provider.ContextWithUserID(c, user.ID)
-	if err := qaService.PostAnswer(ctx, answer); err != nil {
-		c.AbortWithError(500, err)
+	if err := qaService.PostAnswer(c, answer); err != nil {
+		c.ISetStatus(500).IText(err.Error())
 		return
 	}
 

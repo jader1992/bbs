@@ -183,9 +183,9 @@ func TestGeneratePreflightHeaders_AllowMethods(t *testing.T) {
 
 func TestGeneratePreflightHeaders_AllowHeaders(t *testing.T) {
 	header := generatePreflightHeaders(Config{
-		AllowHeaders: []string{"X-user", "Content-Type"},
+		AllowHeaders: []string{"X-user", "Context-Type"},
 	})
-	assert.Equal(t, header.Get("Access-Control-Allow-Headers"), "X-User,Content-Type")
+	assert.Equal(t, header.Get("Access-Control-Allow-Headers"), "X-User,Context-Type")
 	assert.Equal(t, header.Get("Vary"), "Origin")
 	assert.Len(t, header, 2)
 }
@@ -266,7 +266,7 @@ func TestPassesAllowOrigins(t *testing.T) {
 	router := newTestRouter(Config{
 		AllowOrigins:     []string{"http://google.com"},
 		AllowMethods:     []string{" GeT ", "get", "post", "PUT  ", "Head", "POST"},
-		AllowHeaders:     []string{"Content-type", "timeStamp "},
+		AllowHeaders:     []string{"Context-type", "timeStamp "},
 		ExposeHeaders:    []string{"Data", "x-User"},
 		AllowCredentials: false,
 		MaxAge:           12 * time.Hour,
@@ -317,7 +317,7 @@ func TestPassesAllowOrigins(t *testing.T) {
 	assert.Equal(t, "http://github.com", w.Header().Get("Access-Control-Allow-Origin"))
 	assert.Equal(t, "", w.Header().Get("Access-Control-Allow-Credentials"))
 	assert.Equal(t, "GET,POST,PUT,HEAD", w.Header().Get("Access-Control-Allow-Methods"))
-	assert.Equal(t, "Content-Type,Timestamp", w.Header().Get("Access-Control-Allow-Headers"))
+	assert.Equal(t, "Context-Type,Timestamp", w.Header().Get("Access-Control-Allow-Headers"))
 	assert.Equal(t, "43200", w.Header().Get("Access-Control-Max-Age"))
 
 	// deny CORS prefligh request
@@ -334,7 +334,7 @@ func TestPassesAllowAllOrigins(t *testing.T) {
 	router := newTestRouter(Config{
 		AllowAllOrigins:  true,
 		AllowMethods:     []string{" Patch ", "get", "post", "POST"},
-		AllowHeaders:     []string{"Content-type", "  testheader "},
+		AllowHeaders:     []string{"Context-type", "  testheader "},
 		ExposeHeaders:    []string{"Data2", "x-User2"},
 		AllowCredentials: false,
 		MaxAge:           10 * time.Hour,
@@ -361,7 +361,7 @@ func TestPassesAllowAllOrigins(t *testing.T) {
 	assert.Equal(t, http.StatusNoContent, w.Code)
 	assert.Equal(t, "*", w.Header().Get("Access-Control-Allow-Origin"))
 	assert.Equal(t, "PATCH,GET,POST", w.Header().Get("Access-Control-Allow-Methods"))
-	assert.Equal(t, "Content-Type,Testheader", w.Header().Get("Access-Control-Allow-Headers"))
+	assert.Equal(t, "Context-Type,Testheader", w.Header().Get("Access-Control-Allow-Headers"))
 	assert.Equal(t, "36000", w.Header().Get("Access-Control-Max-Age"))
 	assert.Empty(t, w.Header().Get("Access-Control-Allow-Credentials"))
 

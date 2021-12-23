@@ -31,16 +31,54 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/demo/demo": {
-            "get": {
-                "description": "获取所有用户",
+        "/answer/create": {
+            "post": {
+                "description": "创建回答",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "demo"
+                    "qa"
                 ],
-                "summary": "获取所有用户",
+                "summary": "创建回答"
+            }
+        },
+        "/answer/delete": {
+            "get": {
+                "description": "删除回答",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "qa"
+                ],
+                "summary": "删除回答",
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/question/create": {
+            "post": {
+                "description": "创建问题",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "qa"
+                ],
+                "summary": "创建问题",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -51,27 +89,227 @@ var doc = `{
                 }
             }
         },
-        "/demo/demo2": {
+        "/question/delete": {
             "get": {
-                "description": "获取所有学生",
+                "description": "删除问题，同时删除问题中的所有答案",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "demo"
+                    "qa"
                 ],
-                "summary": "获取所有学生",
+                "summary": "删除问题",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "操作成功",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/demo.UserDto"
-                                }
-                            }
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/question/detail": {
+            "get": {
+                "description": "获取问题详情，包括所有的答案",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "qa"
+                ],
+                "summary": "获取问题详细",
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/question/edit": {
+            "post": {
+                "description": "编辑问题",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "qa"
+                ],
+                "summary": "编辑问题",
+                "parameters": [
+                    {
+                        "description": "编辑问题参数",
+                        "name": "questionEditParam",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/qa.questionEditParam"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/question/list": {
+            "get": {
+                "description": "获取问题列表，包含作者信息，不包含回答",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "qa"
+                ],
+                "summary": "获取问题列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "列表页数",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "列表每页展示数量",
+                        "name": "size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "问题列表",
+                        "schema": {
+                            "$ref": "#/definitions/qa.QuestionDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "description": "用户登录接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "用户登录",
+                "responses": {
+                    "200": {
+                        "description": "token",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/logout": {
+            "get": {
+                "description": "调用表示用户登出",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "用户登出",
+                "responses": {
+                    "200": {
+                        "description": "用户登出成功",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/register": {
+            "post": {
+                "description": "用户注册接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "用户注册",
+                "parameters": [
+                    {
+                        "description": "注册参数",
+                        "name": "registerParam",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.registerParam"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "注册成功",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/register/verify": {
+            "get": {
+                "description": "使用token验证用户注册信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "验证注册信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "注册token",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "注册成功，请进入登录页面",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -79,13 +317,114 @@ var doc = `{
         }
     },
     "definitions": {
-        "demo.UserDto": {
+        "qa.AnswerDTO": {
             "type": "object",
             "properties": {
+                "author": {
+                    "$ref": "#/definitions/user.UserDTO"
+                },
+                "authorID": {
+                    "type": "integer"
+                },
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/qa.AnswerDTO"
+                    }
+                },
+                "content": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
-                "name": {
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "qa.QuestionDTO": {
+            "type": "object",
+            "properties": {
+                "answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/qa.AnswerDTO"
+                    }
+                },
+                "author": {
+                    "$ref": "#/definitions/user.UserDTO"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "qa.questionEditParam": {
+            "type": "object",
+            "required": [
+                "content",
+                "id",
+                "title"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.UserDTO": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "userName": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.registerParam": {
+            "type": "object",
+            "required": [
+                "email",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "username": {
                     "type": "string"
                 }
             }
@@ -121,8 +460,8 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "",
 	BasePath:    "/",
 	Schemes:     []string{},
-	Title:       "jader1992",
-	Description: "gocore测试",
+	Title:       "gocore论坛",
+	Description: "gocore论坛",
 }
 
 type s struct{}

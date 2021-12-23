@@ -6,7 +6,7 @@
            <div class="hade_title"><a href="/" id="home-link" title="gocore">gocore</a></div>
           </el-col>
           <el-col class="" :span="8" :offset="8">
-            <div class="header_name">欢迎你，jade | <a href="/" id="home-link" title="gocore">我要提问</a> </div>
+            <div class="header_name"><a href="/" title="hadecast">我要提问</a> | 欢迎你，jade | <a href="/user/logout" id="home-link" title="gocore">登出</a> </div>
           </el-col>
         </el-row>
       </el-col>

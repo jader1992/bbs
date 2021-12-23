@@ -6,25 +6,35 @@ import (
 	"github.com/jader1992/gocore/framework/gin"
 )
 
+// AnswerDelete 删除回答
+// @Summary 删除回答
+// @Description 删除回答
+// @Accept json
+// @Produce json
+// @Tags qa
+// @questionCreateParam id query int true "删除id"
+// @Success 200 {string} Msg "操作成功"
+// @Router /answer/delete [get]
 func (api *QApi) AnswerDelete(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
 
-	type Param struct {
-		ID int64 `json:"id" binding:"required"`
-	}
-
-	param := &Param{}
-	if err := c.ShouldBind(param); err != nil {
-		c.AbortWithError(404, err)
+	// 参数校验
+	id, exist := c.DefaultQueryInt64("id", 0)
+	if !exist {
+		c.ISetStatus(404).IText("参数错误")
 		return
 	}
 
 	user := auth.GetAuthUser(c)
 
-	ctx := provider.ContextWithUserID(c, user.ID)
-	if err := qaService.DeleteQuestion(ctx, param.ID); err != nil {
-		c.AbortWithError(500, err)
+	answer, err := qaService.GetAnswer(c, id)
+	if err != nil {
+		c.ISetStatus(500).IText(err.Error())
 		return
+	}
+
+	if answer.AuthorID != user.ID {
+		c.ISetStatus(500).IText("没有权限做此操作")
 	}
 
 	c.ISetOkStatus().IText("操作成功")

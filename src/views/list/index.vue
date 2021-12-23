@@ -6,18 +6,18 @@
             class="list"
             v-infinite-scroll="load"
             infinite-scroll-disabled="disabled">
-            <el-card v-for="i in count" class="box-card" shadow="hover">
-              <div slot="header" class="clearfix">
-          <span>问题标题{{i}}</span>
-        </div>
-              <div class="text item">
-                这个是问题的具体内容，显示前200个字...
-              </div>
-              <div class="bottom clearfix">
-                  <time class="time">2021-10-10 10:10:10 ｜ jianfengye  | 10 回答</time>
-                  <el-button type="text" class="button">去看看</el-button>
-              </div>
-            </el-card>
+          <el-card v-for="(key, i) in count" class="box-card" shadow="hover" :key="index">
+            <div slot="header" class="clearfix">
+              <span>问题标题{{i}}</span>
+            </div>
+            <div class="text item">
+              这个是问题的具体内容，显示前200个字...
+            </div>
+            <div class="bottom clearfix">
+              <time class="time">2021-10-10 10:10:10 ｜ jade  | 10 回答</time>
+              <el-button type="text" class="button">去看看</el-button>
+            </div>
+          </el-card>
         </ul>
         <p v-if="loading" class="loading_tips">加载中...</p>
         <p v-if="noMore" class="loading_tips">没有更多了</p>

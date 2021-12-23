@@ -1,7 +1,7 @@
 // Package http API.
-// @title jader1992
+// @title gocore论坛
 // @version 1.1
-// @description gocore测试
+// @description gocore论坛
 // @termsOfService https://github.com/swaggo/swag
 
 // @contact.name zero
@@ -10,7 +10,7 @@
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @BasePath /1111
+// @BasePath /
 // @query.collection.format multi
 
 // @securityDefinitions.basic BasicAuth

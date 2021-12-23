@@ -7,14 +7,24 @@ import (
 	"github.com/jader1992/gocore/framework/gin"
 )
 
+type questionCreateParam struct {
+	Title string `json:"title" binding:"required"`
+	Content string `json:"content" binding:"required"`
+}
+
+// QuestionCreate 创建问题
+// @Summary 创建问题
+// @Description 创建问题
+// @Accept json
+// @Product json
+// @Tags qa
+// @questionEditParam questionCreateParam body questionCreateParam true "创建问题参数"
+// @Success 200 {string} Msg 操作承诺
+// @Router /question/create [post]
 func (api *QApi) QuestionCreate(c *gin.Context)  {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
-	type Param struct {
-		Title string `json:"title" binding:"required"`
-		Content string `json:"content" binding:"required"`
-	}
 
-	param := &Param{}
+	param := &questionCreateParam{}
 	if err := c.ShouldBind(param);err != nil {
 		c.AbortWithError(404, err)
 		return
@@ -27,8 +37,8 @@ func (api *QApi) QuestionCreate(c *gin.Context)  {
 	}
 
 	question := &provider.Question{
-		Title: param.Title,
-		Content: param.Content,
+		Title:    param.Title,
+		Context:  param.Content,
 		AuthorID: user.ID,
 	}
 

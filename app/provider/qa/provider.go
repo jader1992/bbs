@@ -19,7 +19,7 @@ func (sp *QaProvider) Register(c framework.Container) framework.NewInstance {
 }
 
 func (sp *QaProvider) IsDefer() bool {
-	return false
+	return true
 }
 
 func (sp *QaProvider) Params(c framework.Container) []interface{} {

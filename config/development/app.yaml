@@ -16,6 +16,15 @@ dev: # 调试模式
     port: 8072 # 后端监听端口默认 8072
     monitor_folder: "" # 监听文件件，为空或者不填写，则为默认AppFolder
     cmd: "./bbs" # 后端执行的命令
-  fronted: # 前段调试模式设置
-    port: 8071 # 前端监听端口，默认8071
+  frontend: # 前段调试模式设置
+    port: 8010 # 前端监听端口，默认8010
+
+domain: "http://gocore.funaio.cn"
+
+smtp:
+  host: "smtp.126.com"
+  port: 25
+  from: "guyia199204@126.com"
+  username: "guyia199204"
+  password: "IVQYNTBBVTQUOGOY"
 

@@ -7,27 +7,24 @@ import (
 
 // QuestionDTO 问题列表返回结构
 type QuestionDTO struct {
-	ID int64
-	Title string
-	Content  string
-	AuthorID  int64
+	ID        int64
+	Title     string
+	Content   string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 
-	Author *user.UserDTO
-	Answers [] *AnswerDTO
+	Author  *user.UserDTO
+	Answers []*AnswerDTO
 }
 
 // AnswerDTO 回答返回结构
 type AnswerDTO struct {
-	ID int64
-	Content string
-	AuthorID int64
+	ID        int64
+	Content   string
+	AuthorID  int64
 	CreatedAt time.Time
 	UpdatedAt time.Time
 
 	Author   *user.UserDTO
 	Children []*AnswerDTO
 }
-
-

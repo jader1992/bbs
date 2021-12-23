@@ -38,7 +38,7 @@ type Config struct {
 	// API specification
 	ExposeHeaders []string
 
-	// MaxAge indicates how long (with second-precision) the results of a preflight request 
+	// MaxAge indicates how long (with second-precision) the results of a preflight request
 	// can be cached
 	MaxAge time.Duration
 
@@ -146,7 +146,7 @@ func (c Config) parseWildcardRules() [][]string {
 func DefaultConfig() Config {
 	return Config{
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type"},
+		AllowHeaders:     []string{"Origin", "Context-Length", "Context-Type"},
 		AllowCredentials: false,
 		MaxAge:           12 * time.Hour,
 	}

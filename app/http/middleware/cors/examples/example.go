@@ -18,7 +18,7 @@ func main() {
 		AllowOrigins:     []string{"https://foo.com"},
 		AllowMethods:     []string{"PUT", "PATCH"},
 		AllowHeaders:     []string{"Origin"},
-		ExposeHeaders:    []string{"Content-Length"},
+		ExposeHeaders:    []string{"Context-Length"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
 			return origin == "https://github.com"

@@ -2,22 +2,30 @@ package user
 
 import (
 	provider "bbs/app/provider/user"
-	"errors"
 	"github.com/jader1992/gocore/framework/gin"
 )
 
+type loginParam struct {
+	UserName string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required,gte=6"`
+}
+
+// Login 用户登录
+// @Summary 用户登录
+// @Description 用户登录接口
+// @Accept json
+// @Produce json
+// @Tags user
+// @registerParam loginParam body loginParam true "login with param"
+// @Success 200 string Token "token"
+// @Router /user/login [post]
 func (api *UApi) Login(c *gin.Context) {
 	// 验证参数
 	userService := c.MustMake(provider.UserKey).(provider.Service)
 
-	type Param struct {
-		UserName string `json:"username" binding:"required"`
-		Password string `json:"password" binding:"required,gte=6"`
-	}
-
-	param := &Param{}
+	param := &loginParam{}
 	if err := c.ShouldBind(param); err != nil {
-		c.AbortWithError(404, err)
+		c.ISetStatus(400).IText("参数错误")
 		return
 	}
 
@@ -29,16 +37,16 @@ func (api *UApi) Login(c *gin.Context) {
 
 	userWithToken, err := userService.Login(c, model)
 	if err != nil {
-		c.AbortWithError(500, err)
+		c.ISetStatus(500).IText(err.Error())
 		return
 	}
 
 	if userWithToken == nil {
-		c.AbortWithError(500, errors.New("用户不存在"))
+		c.ISetStatus(500).IText("用户不存在")
 		return
 	}
 
 	// 输出
-	c.IJson(map[string]interface{}{"token": userWithToken.Token})
+	c.ISetOkStatus().IText(userWithToken.Token)
 	return
 }

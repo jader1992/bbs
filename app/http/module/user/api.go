@@ -7,7 +7,6 @@ import (
 )
 
 type UApi struct {
-
 }
 
 func RegisterRoutes(r *gin.Engine) error {

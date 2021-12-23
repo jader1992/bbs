@@ -1,21 +1,21 @@
 package tests
 
 import (
-	"github.com/gohade/hade/framework"
-	"github.com/gohade/hade/framework/provider/app"
-	"github.com/gohade/hade/framework/provider/env"
+	"github.com/jader1992/gocore/framework"
+	"github.com/jader1992/gocore/framework/provider/app"
+	"github.com/jader1992/gocore/framework/provider/env"
 )
 
 const (
-	BasePath = "/Users/yejianfeng/Documents/UGit/coredemo/"
+	BasePath = "/Users/jade/Desktop/go/bbs/"
 )
 
 func InitBaseContainer() framework.Container {
 	// 初始化服务容器
-	container := framework.NewHadeContainer()
+	container := framework.NewGocoreContainer()
 	// 绑定App服务提供者
-	container.Bind(&app.HadeAppProvider{BaseFolder: BasePath})
+	container.Bind(&app.GocoreAppProvider{BaseFolder: BasePath})
 	// 后续初始化需要绑定的服务提供者...
-	container.Bind(&env.HadeTestingEnvProvider{})
+	container.Bind(&env.GocoreEnvProvider{})
 	return container
 }
