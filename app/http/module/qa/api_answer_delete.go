@@ -13,7 +13,7 @@ import (
 // @Produce json
 // @Tags qa
 // @questionCreateParam id query int true "删除id"
-// @Success 200 {string} Msg "操作成功"
+// @Success 200 string Msg "操作成功"
 // @Router /answer/delete [get]
 func (api *QApi) AnswerDelete(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
@@ -21,7 +21,7 @@ func (api *QApi) AnswerDelete(c *gin.Context) {
 	// 参数校验
 	id, exist := c.DefaultQueryInt64("id", 0)
 	if !exist {
-		c.ISetStatus(404).IText("参数错误")
+		c.ISetStatus(400).IText("参数错误")
 		return
 	}
 
@@ -35,6 +35,11 @@ func (api *QApi) AnswerDelete(c *gin.Context) {
 
 	if answer.AuthorID != user.ID {
 		c.ISetStatus(500).IText("没有权限做此操作")
+	}
+
+	if err := qaService.DeleteAnswer(c, id); err != nil {
+		c.ISetStatus(500).IText(err.Error())
+		return
 	}
 
 	c.ISetOkStatus().IText("操作成功")

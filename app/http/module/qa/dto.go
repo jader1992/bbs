@@ -10,6 +10,7 @@ type QuestionDTO struct {
 	ID        int64
 	Title     string
 	Content   string
+	AnswerNum int       `json:"answer_num"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 

@@ -21,7 +21,7 @@ type registerParam struct {
 // @Produce  json
 // @Tags user
 // @Param registerParam body registerParam true "注册参数"
-// @Success 200 {string} Message "注册成功"
+// @Success 200 string Message "注册成功"
 // @Router /user/register [post]
 func (api *UApi) Register(c *gin.Context) {
 	// 验证参数

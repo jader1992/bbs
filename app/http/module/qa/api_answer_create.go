@@ -9,7 +9,7 @@ import (
 type answerCreateParam struct {
 	QuestionID int64  `json:"question_id" binding:"required"`
 	ParentID   int64  `json:"parent_id"`
-	Content    string `json:"content" binding:"required"`
+	Context    string `json:"context" binding:"required"`
 }
 
 // AnswerCreate 创建回答
@@ -19,13 +19,14 @@ type answerCreateParam struct {
 // @Produce json
 // @Tags qa
 // @questionCreateParam answerCreateParam body answerCreateParam true "创建回答参数"
+// @Success 200 string Msg "操作成功"
 // @Router /answer/create [post]
 func (api *QApi) AnswerCreate(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
 
 	param := &answerCreateParam{}
 	if err := c.ShouldBind(param); err != nil {
-		c.ISetStatus(404).IText(err.Error())
+		c.ISetStatus(400).IText(err.Error())
 		return
 	}
 
@@ -37,7 +38,7 @@ func (api *QApi) AnswerCreate(c *gin.Context) {
 
 	answer := &provider.Answer{
 		QuestionID: param.QuestionID,
-		Content:    param.Content,
+		Context:    param.Context,
 		AuthorID:   user.ID,
 	}
 

@@ -13,14 +13,14 @@ import (
 // @Produce json
 // @Tags qa
 // @questionEditParam id query int true "需要删除问题的ID"
-// @Success 200 {string} Msg "操作成功"
+// @Success 200 string Msg "操作成功"
 // @Router /question/delete [get]
 func (api *QApi) QuestionDelete(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
 
 	id, exist := c.DefaultQueryInt64("id", 0)
 	if !exist {
-		c.ISetStatus(404).IText("参数错误")
+		c.ISetStatus(400).IText("参数错误")
 		return
 	}
 

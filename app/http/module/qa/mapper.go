@@ -3,6 +3,8 @@ package qa
 import (
 	"bbs/app/http/module/user"
 	"bbs/app/provider/qa"
+	"github.com/PuerkitoBio/goquery"
+	"strings"
 )
 
 // ConvertAnswersToDTO 将answers转化为带有tree结构的AnswerDTO
@@ -34,9 +36,9 @@ func ConvertAnswerToDTO(answer *qa.Answer) *AnswerDTO {
 
 	return &AnswerDTO{
 		ID:        answer.ID,
-		Content:   answer.Content,
-		CreatedAt: answer.CreateAt,
-		UpdatedAt: answer.UpdateAt,
+		Content:   answer.Context,
+		CreatedAt: answer.CreatedAt,
+		UpdatedAt: answer.UpdatedAt,
 		Author:    author,
 	}
 }
@@ -48,13 +50,13 @@ func ConvertQuestionsToDTO(questions []*qa.Question) []*QuestionDTO {
 	}
 	ret := make([]*QuestionDTO, 0, len(questions))
 	for _, question := range questions {
-		ret = append(ret, ConvertQuestionToDTO(question))
+		ret = append(ret, ConvertQuestionToDTO(question, map[string]string{"is_short_context": "true"}))
 	}
 	return ret
 }
 
 // ConvertQuestionToDTO 将问题 question 转成 QuestionDTO
-func ConvertQuestionToDTO(question *qa.Question) *QuestionDTO {
+func ConvertQuestionToDTO(question *qa.Question, flags map[string]string) *QuestionDTO {
 	if question == nil {
 		return nil
 	}
@@ -66,13 +68,37 @@ func ConvertQuestionToDTO(question *qa.Question) *QuestionDTO {
 		}
 	}
 
+	context := question.Context
+	if flags != nil {
+		if isShortContext, ok := flags["is_short_context"]; ok && isShortContext == "true" {
+			context = getShortContext(context)
+		}
+	}
+
 	return &QuestionDTO{
 		ID:        question.ID,
 		Title:     question.Title,
-		Content:   question.Context,
+		Content:   context,
 		CreatedAt: question.CreatedAt,
 		UpdatedAt: question.UpdatedAt,
 		Author:    author,
 		Answers:   ConvertAnswersToDTO(question.Answers),
+		AnswerNum: question.AnswerNum,
 	}
+}
+
+// getShortContext 处理长度
+func getShortContext(context string) string {
+	p := strings.NewReader(context)
+	doc, _ := goquery.NewDocumentFromReader(p)
+
+	doc.Find("script").Each(func(i int, el *goquery.Selection) {
+		el.Remove()
+	})
+
+	text := doc.Text()
+	if len(text) > 20 {
+		text = text[:20] + "..."
+	}
+	return text
 }

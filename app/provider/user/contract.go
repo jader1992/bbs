@@ -47,4 +47,7 @@ type Service interface {
 	Logout(ctx context.Context, user *User) error
 	// VerifyLogin 登录验证
 	VerifyLogin(ctx context.Context, token string) (*User, error)
+
+	// GetUser 获取用户信息
+	GetUser(ctx context.Context, userID int64) (*User, error)
 }

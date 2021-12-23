@@ -94,6 +94,11 @@ paths:
       description: 创建回答
       produces:
       - application/json
+      responses:
+        "200":
+          description: 操作成功
+          schema:
+            type: string
       summary: 创建回答
       tags:
       - qa
@@ -149,9 +154,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: 操作成功
+          description: 问题详情，带回答和作者
           schema:
-            type: string
+            type: QuestionDTO
       summary: 获取问题详细
       tags:
       - qa
@@ -195,7 +200,9 @@ paths:
         "200":
           description: 问题列表
           schema:
-            $ref: '#/definitions/qa.QuestionDTO'
+            items:
+              $ref: '#/definitions/qa.QuestionDTO'
+            type: array
       summary: 获取问题列表
       tags:
       - qa

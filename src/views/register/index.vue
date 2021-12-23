@@ -2,29 +2,25 @@
   <div class="register">
     <el-card>
       <h2>注册</h2>
-      <el-form
-          class="register-form"
-      >
-        <el-form-item prop="username">
-          <el-input v-model="form.username" placeholder="用户名" prefix-icon="fas fa-user"></el-input>
+      <el-form v-model="form" class="register-form">
+        <el-form-item >
+          <el-input v-model="form.username" placeholder="用户名" ></el-input>
         </el-form-item>
-        <el-form-item prop="email">
-          <el-input v-model="form.email" placeholder="邮箱" prefix-icon="fas fa-user"></el-input>
+        <el-form-item >
+          <el-input v-model="form.email" placeholder="邮箱"></el-input>
         </el-form-item>
-        <el-form-item prop="password">
+        <el-form-item >
           <el-input
-              v-model="form.password"
               placeholder="密码"
               type="password"
-              prefix-icon="fas fa-lock"
+              v-model="form.password"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="password">
+        <el-form-item >
           <el-input
-              v-model="form.repassword"
               placeholder="确认密码"
               type="password"
-              prefix-icon="fas fa-lock"
+              v-model="form.repassword"
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -45,7 +41,6 @@
 <script>
 import request from '../../utils/request'
 
-
 export default {
   name: "register",
   data() {
@@ -53,8 +48,8 @@ export default {
       form: {
         username: '',
         password: '',
-        repassword: '',
         email: '',
+        repassword: ''
       },
       loading: false,
     };

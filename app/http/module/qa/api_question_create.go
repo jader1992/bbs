@@ -3,12 +3,11 @@ package qa
 import (
 	"bbs/app/http/middleware/auth"
 	provider "bbs/app/provider/qa"
-	"errors"
 	"github.com/jader1992/gocore/framework/gin"
 )
 
 type questionCreateParam struct {
-	Title string `json:"title" binding:"required"`
+	Title   string `json:"title" binding:"required"`
 	Content string `json:"content" binding:"required"`
 }
 
@@ -19,20 +18,20 @@ type questionCreateParam struct {
 // @Product json
 // @Tags qa
 // @questionEditParam questionCreateParam body questionCreateParam true "创建问题参数"
-// @Success 200 {string} Msg 操作承诺
+// @Success 200 string Msg 操作承诺
 // @Router /question/create [post]
-func (api *QApi) QuestionCreate(c *gin.Context)  {
+func (api *QApi) QuestionCreate(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
 
 	param := &questionCreateParam{}
-	if err := c.ShouldBind(param);err != nil {
-		c.AbortWithError(404, err)
+	if err := c.ShouldBind(param); err != nil {
+		c.ISetStatus(400).IText(err.Error())
 		return
 	}
 
 	user := auth.GetAuthUser(c)
 	if user == nil {
-		c.AbortWithError(500, errors.New("无权限操作"))
+		c.ISetStatus(500).IText("无权限操作")
 		return
 	}
 
@@ -42,8 +41,8 @@ func (api *QApi) QuestionCreate(c *gin.Context)  {
 		AuthorID: user.ID,
 	}
 
-	if err := qaService.PostQuestion(c,question); err != nil {
-		c.AbortWithError(500, err)
+	if err := qaService.PostQuestion(c, question); err != nil {
+		c.ISetStatus(500).IText(err.Error())
 		return
 	}
 

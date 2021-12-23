@@ -22,9 +22,9 @@ service.interceptors.request.use(
 
 // response中统一做处理
 service.interceptors.response.use(
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
     response => {
+        // Any status code that lie within the range of 2xx cause this function to trigger
+        // Do something with response data
         // 判断http status是否为200
         if (response.status !== 200) {
             const data = response.data
@@ -41,7 +41,7 @@ service.interceptors.response.use(
     error => {
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
-        console.log('err' + error) // for debug
+        console.log('err: ' + error) // for debug
         // 打印Message消息
         Message({
             message: error.response.data,

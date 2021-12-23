@@ -43,7 +43,15 @@ var doc = `{
                 "tags": [
                     "qa"
                 ],
-                "summary": "创建回答"
+                "summary": "创建回答",
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         },
         "/answer/delete": {
@@ -127,9 +135,9 @@ var doc = `{
                 "summary": "获取问题详细",
                 "responses": {
                     "200": {
-                        "description": "操作成功",
+                        "description": "问题详情，带回答和作者",
                         "schema": {
-                            "type": "string"
+                            "type": "QuestionDTO"
                         }
                     }
                 }
@@ -197,7 +205,10 @@ var doc = `{
                     "200": {
                         "description": "问题列表",
                         "schema": {
-                            "$ref": "#/definitions/qa.QuestionDTO"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/qa.QuestionDTO"
+                            }
                         }
                     }
                 }

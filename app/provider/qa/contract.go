@@ -3,6 +3,7 @@ package qa
 import (
 	"bbs/app/provider/user"
 	"context"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -12,34 +13,35 @@ const QaKey = "qa"
 
 // Question 代表问题
 type Question struct {
-	ID        int64     `gorm:"column:id;primaryKey"`
-	Title    string `gorm:"column:title"`
-	Context  string `gorm:"column:context"`
-	AuthorID int64  `gorm:"column:author_id"`
-	AnswerNum int       `gorm:"column:answer_num"`
-	CreatedAt time.Time `gorm:"column:created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at"`
-
-	Author  *user.User `gorm:"foreignKey:AuthorID"`
-	Answers []*Answer  `gorm:"foreignKey:QuestionID"`
+	ID        int64          `gorm:"column:id;primaryKey"`
+	Title     string         `gorm:"column:title;comment:标题"`
+	Context   string         `gorm:"column:context;comment:内容"`
+	AuthorID  int64          `gorm:"column:author_id;comment:作者id;not null;default:0"`
+	AnswerNum int            `gorm:"column:answer_num;comment:回答数;not null;default:0"`
+	CreatedAt time.Time      `gorm:"column:created_at;autoCreateTime;comment:创建时间"`
+	UpdatedAt time.Time      `gorm:"column:updated_at;autoUpdateTime;autoCreateTime;<-:false;comment:更新时间"`
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Author    *user.User     `gorm:"foreignKey:AuthorID"`
+	Answers   []*Answer      `gorm:"foreignKey:QuestionID"`
 }
 
+// Answer 代表一个回答
 type Answer struct {
-	ID         int64     `gorm:"column:id;primaryKey"`
-	QuestionID int64     `gorm:"column:question_id"`
-	Content    string    `gorm:"column:context"`
-	AuthorID   int64     `gorm:"column:author_id"`
-	CreateAt   time.Time `gorm:"column:created_at"`
-	UpdateAt   time.Time `gorm:"column:updated_at"`
-
-	Author   *user.User `gorm:"foreignKey:author_id"`
-	Question *Question  `gorm:"foreignKey:question_id"`
+	ID         int64          `gorm:"column:id;primaryKey"`
+	QuestionID int64          `gorm:"column:question_id;index;comment:问题id;not null;default 0"`
+	Context    string         `gorm:"column:context;comment:内容"`
+	AuthorID   int64          `gorm:"column:author_id;comment:作者id;not null;default:0"`
+	CreatedAt  time.Time      `gorm:"column:created_at;autoCreateTime;comment:创建时间"`
+	UpdatedAt  time.Time      `gorm:"column:updated_at;autoUpdateTime;autoCreateTime;<-:false;comment:更新时间"`
+	DeletedAt  gorm.DeletedAt `gorm:"index"`
+	Author     *user.User     `gorm:"foreignKey:author_id"`
+	Question   *Question      `gorm:"foreignKey:question_id"`
 }
 
 type Pager struct {
-	Total int
-	Start int
-	Size  int
+	Total int64 // 共有多少数据，只有返回值使用
+	Start int   // 起始位置
+	Size  int   // 每个页面个数
 }
 
 // Service 代表qa的服务
@@ -55,18 +57,23 @@ type Service interface {
 	// QuestionLoadAuthor 问题加载Author字段
 	QuestionLoadAuthor(ctx context.Context, question *Question) error
 	// QuestionsLoadAuthor 批量加载Author字段
-	QuestionsLoadAuthor(ctx context.Context, questions []*Question) error
+	QuestionsLoadAuthor(ctx context.Context, questions *[]*Question) error
 
 	// QuestionLoadAnswers 单个问题加载Answers
 	QuestionLoadAnswers(ctx context.Context, question *Question) error
 	// QuestionsLoadAnswers 批量问题加载Answers
-	QuestionsLoadAnswers(ctx context.Context, questions []*Question) error
+	QuestionsLoadAnswers(ctx context.Context, questions *[]*Question) error
 
 	// PostAnswer 上传某个回答
 	// ctx必须带操作人信息
 	PostAnswer(ctx context.Context, answer *Answer) error
 	// GetAnswer 获取回答
 	GetAnswer(ctx context.Context, answerID int64) (*Answer, error)
+
+	// AnswerLoadAuthor 问题加载Author字段
+	AnswerLoadAuthor(ctx context.Context, question *Answer) error
+	// AnswersLoadAuthor 批量加载Author字段
+	AnswersLoadAuthor(ctx context.Context, questions *[]*Answer) error
 
 	// DeleteQuestion 删除问题，同时删除对应的回答
 	// ctx必须带操作人信息

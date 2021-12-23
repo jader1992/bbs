@@ -13,19 +13,22 @@ import (
 // @Tags qa
 // @Param page query int false "列表页数"
 // @Param size query int false "列表每页展示数量"
-// @Success 200 {object} QuestionDTO "问题列表"
+// @Success 200 {array} QuestionDTO questions "问题列表"
 // @Router /question/list [get]
 func (api *QApi) QuestionList(c *gin.Context) {
 	qaService := c.MustMake(provider.QaKey).(provider.Service)
-
-	page, _ := c.DefaultQueryInt("page", 1)
+	start, _ := c.DefaultQueryInt("start", 0)
 	size, _ := c.DefaultQueryInt("size", 10)
+	logger := c.MustMakeLog()
 
-	start := (page - 1) * size
 	pager := provider.Pager{
 		Start: start,
 		Size:  size,
 	}
+
+	logger.Debug(c, "get param", map[string]interface{}{
+		"pager": pager,
+	})
 
 	questions, err := qaService.GetQuestions(c, &pager)
 	if err != nil {
@@ -33,7 +36,12 @@ func (api *QApi) QuestionList(c *gin.Context) {
 		return
 	}
 
-	if err := qaService.QuestionsLoadAuthor(c, questions); err != nil {
+	if len(questions) == 0 {
+		c.ISetOkStatus().IJson([]*QuestionDTO{})
+		return
+	}
+
+	if err := qaService.QuestionsLoadAuthor(c, &questions); err != nil {
 		c.ISetStatus(500).IText(err.Error())
 		return
 	}

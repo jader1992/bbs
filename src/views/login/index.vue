@@ -6,13 +6,12 @@
           class="login-form"
       >
         <el-form-item prop="username">
-          <el-input v-model="model.username" placeholder="用户名" prefix-icon="fas fa-user"></el-input>
+          <el-input v-model="model.username" placeholder="用户名" ></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input
               placeholder="密码"
               type="password"
-              prefix-icon="fas fa-lock"
               v-model="model.password"
           ></el-input>
         </el-form-item>

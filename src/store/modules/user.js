@@ -5,7 +5,7 @@ import request from "../../utils/request";
 const getDefaultState = () => {
   return {
     token: getToken(),
-    name: 'jade',
+    name: 'jianfengye',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
   }
 }
@@ -32,7 +32,7 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      request("/user/login",{ username: username.trim(), password: password }).then(response => {
+      request.post("/user/login",{ username: username.trim(), password: password }).then(response => {
         const token = response.data
         commit('SET_TOKEN', token)
         setToken(token)
